@@ -37,7 +37,7 @@ router.post('/login', async (req, res) => {
         const user = rows[0];
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid password' });
         }
         const token = jwt.sign({ userId: user.id }, 'secret_key'); // Use a strong secret key
         res.cookie('token', token, { httpOnly: true }); //Set token as an HTTP-only cookie

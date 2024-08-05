@@ -1,26 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth');
-// const promisePool = require('./db');
+const promisePool = require('./db');
+const cors = require('cors')
 const app = express();
-const mysql = require('mysql2');
-
-// Create a connection pool
-const pool = mysql.createPool({
-    host: '127.0.0.1',    // Database host
-    user: 'root',         // Database user
-    password: 'root',     // Database password
-    database: 'nostalgia_movie', // Database name
-    // port: '3000'
-});
-
-// Promisify for Node.js async/await
-const promisePool = pool.promise();
-console.log('promises pool')
+// const mysql = require('mysql2');
 
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 console.log('after body parser');
 
 // Serve static files from 'public' directory
@@ -42,7 +31,7 @@ promisePool.getConnection()
     });
 
 // Start the server
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
