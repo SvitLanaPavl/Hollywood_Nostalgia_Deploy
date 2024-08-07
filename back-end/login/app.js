@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const movieRoutes = require('./routes/movies');
 const promisePool = require('./db');
-const cors = require('cors')
 const app = express();
-// const mysql = require('mysql2');
 
 // Middleware
 app.use(bodyParser.json());
@@ -18,6 +18,7 @@ console.log('after static public directory');
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/movies', movieRoutes);
 console.log('after route');
 
 // Test database connection
