@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const movieRoutes = require('./routes/movies');
-const promisePool = require('./db');
+const pool = require('./db');
 const app = express();
 
 // Middleware
@@ -22,17 +22,21 @@ app.use('/movies', movieRoutes);
 console.log('after route');
 
 // Test database connection
-promisePool.getConnection()
-    .then(connection => {
+(async () => {
+    try {
+        await pool.query('SELECT 1');
         console.log('Connection to MySQL has been established successfully.');
-        connection.release(); // Release the connection back to the pool
-    })
-    .catch(err => {
+    } catch (err) {
         console.error('Unable to connect to the database:', err);
-    });
+        process.exit(1);
+    }
+})();
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+// made server for tests
+const server = app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+module.exports = { app, server };
