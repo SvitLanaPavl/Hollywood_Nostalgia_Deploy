@@ -1,8 +1,16 @@
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: transparent;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10; /* Ensure it sits on top of the hero section */
+  background-color: rgba(20, 20, 20, 0.6); /* Initial transparent grayish background */
+  transition: background-color 0.3s ease-in-out;
+}
+
+.navbar.fixed {
+  position: fixed;
+  top: 0;
+  background-color: #000000; /* Black background when scrolled */
 }
 .navbar-logo span {
   color: #E74504;
@@ -55,7 +63,7 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .search-bar:focus-within {
-  border-color: rgba(231, 69, 4, 0.3);
+  border-color: rgba(231, 69, 4, 0.2);
 }
 .signup-btn {
   display: flex;
@@ -79,8 +87,8 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   align-items: center;
   border-radius: 20px;
   border: 1px solid #E74504;
-  background-color: transparent;
   color: #E74504;
+  background-color: transparent;
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   cursor: pointer;
@@ -101,4 +109,10 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .cancel-text:hover {
   opacity: 1;
+}
+.thin-input {
+  font-weight: 400; /* Light weight */
+  font-size: 10px;
+  opacity: 0.7;
+  font-family: 'Inter', sans-serif; /* Ensure you're using the correct font */
 }

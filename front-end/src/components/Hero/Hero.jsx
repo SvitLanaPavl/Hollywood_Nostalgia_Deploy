@@ -7,17 +7,17 @@ import halfStarIcon from '../../assets/half_star_icon.svg'
 
 const Hero = () => {
   return (
-    <div className='hero-container'>
+    <div className='hero-container w-100 shadow-inner'>
       <div className='hero-overlay'>
-        <div className='hero-content grid grid-cols-3 gap-4'>
+        <div className='hero-content pt-6 grid grid-cols-3 gap-4'>
           <h1 className='hero-title col-span-3'>
             Step back in time with <br />
             <span className='highlight'>OLD HOLLYWOOD</span>
           </h1>
-          <p className='hero-description col-span-2'>
+          <p className='hero-description col-span-1'>
           Discover the magic of the Golden Age of Hollywood! Immerse yourself in timeless classics and iconic performances.
           </p>
-          <div className='hero-rating col-span-2'>
+          <div className='hero-rating col-span-3'>
             <div className='stars flex'>
               <img src={starIcon} alt='Stars' className='pe-1' />
               <img src={starIcon} alt='Stars' className='pe-1'/>

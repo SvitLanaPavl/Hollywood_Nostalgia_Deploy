@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import './Navbar.css'
 import searchIcon from '../../assets/search_icon.svg'
 import closeIcon from '../../assets/close_icon.svg';
@@ -7,6 +7,22 @@ import logo from '/logoOH.png';
 const Navbar = () => {
   const [searchActive, setSearchActive] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const toggleSearch = () => {
     setSearchActive(!searchActive);
@@ -27,7 +43,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className='navbar md:container md:mx-auto py-3'>
+    <div className={`navbar ${isScrolled ? 'fixed' : ''} flex py-1 px-4 justify-between shadow-2xl`}>
       <div className='navbar-logo flex'>
       <img src={logo} alt="Logo" className="logo-image hover:scale-110 transition ease-in-out delay-125" />
        <span className='px-1'>Old Hollywood</span> 
@@ -39,13 +55,14 @@ const Navbar = () => {
         )}
         {searchActive && (
           <>
-          <div className='search-bar'>
+          <div className='search-bar shadow-lg'>
             <img src={searchIcon} alt='Search Icon' className='search-icon-inside'/>
             <input 
             type='text'
             placeholder='Title, actors, genre'
             value={searchTerm}
-            onChange={handleSearchChange} 
+            onChange={handleSearchChange}
+            className='thin-input'
             />
             {searchTerm && (
               <img src={closeIcon}
