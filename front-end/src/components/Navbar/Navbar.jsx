@@ -27,13 +27,13 @@ const Navbar = () => {
   };
 
   return (
-    <div className='navbar'>
-      <div className='navbar-logo'>
-      <img src={logo} alt="Logo" className="logo-image" />
-       <span>Old Hollywood</span> 
+    <div className='navbar md:container md:mx-auto py-3'>
+      <div className='navbar-logo flex'>
+      <img src={logo} alt="Logo" className="logo-image hover:scale-110 transition ease-in-out delay-125" />
+       <span className='px-1'>Old Hollywood</span> 
       </div>
       <div className='navbar-right'>
-        {!searchActive && (<div className='search-icon' onClick={toggleSearch}>
+        {!searchActive && (<div className='search-icon hover:scale-125 transition ease-in-out delay-125' onClick={toggleSearch}>
           <img src={searchIcon} alt='Search Icon' />
         </div>
         )}
@@ -58,8 +58,8 @@ const Navbar = () => {
           <span className='cancel-text' onClick={handleCancel}>Cancel</span>
           </>
         )}
-        <button className='signup-btn hover:brightness-110 hover:opacity-7 rounded-full bg-primary shadow-primary text-white'>Sign up</button>
-        <button className='login-btn shadow-lg hover:text-white duration-300 cursor-pointer active:scale-[0.98] hover:bg-primary'>Log in</button>
+        <button className='signup-btn hover:brightness-110 rounded-full bg-primary shadow-primary text-white'>Sign up</button>
+        <button className='login-btn shadow-lg hover:text-white duration-300 cursor-pointer active:scale-[0.98] hover:bg-primary transition ease-in-out delay-125'>Log in</button>
       </div>
     </div>
   );
