@@ -7,21 +7,22 @@ const csv = require('csv-parser');
 const connection = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: '',
+  password: 'root',
   database: 'nostalgia_movie'
 });
 
 // Connect to MySQL
-connection.connect((err) => {
-  if (err) throw err;
+connection.connect((error) => {
+  if (error) throw error;
   console.log('Connected to MySQL server.');
 
-  // SQL queries to drop and create the database and table
+  // SQL queries to drop and create the database and tables
   const dbName = 'nostalgia_movie';
   const dropDB = `DROP DATABASE IF EXISTS ${dbName}`;
   const createDB = `CREATE DATABASE ${dbName}`;
   const useDB = `USE ${dbName}`;
-  const createTable = `
+  
+  const createMoviesTable = `
   CREATE TABLE Old_Hollywood_Movies (
     ID INT PRIMARY KEY,
     Title VARCHAR(255),
@@ -36,59 +37,74 @@ connection.connect((err) => {
   )
   `;
 
+  const createLoginTable = `
+  CREATE TABLE login_tb (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255)
+  )
+  `;
+
   // Drop the database if it exists
-  connection.query(dropDB, (err) => {
-    if (err) throw err;
+  connection.query(dropDB, (error) => {
+    if (error) throw error;
     console.log('Database dropped.');
 
     // Create the database
-    connection.query(createDB, (err) => {
-      if (err) throw err;
+    connection.query(createDB, (error) => {
+      if (error) throw error;
       console.log('Database created.');
 
       // Use the new database
-      connection.query(useDB, (err) => {
-        if (err) throw err;
+      connection.query(useDB, (error) => {
+        if (error) throw error;
         console.log('Using database.');
 
-        // Create the table
-        connection.query(createTable, (err) => {
-          if (err) throw err;
-          console.log('Table created.');
+        // Create the Old_Hollywood_Movies table
+        connection.query(createMoviesTable, (error) => {
+          if (error) throw error;
+          console.log('Old_Hollywood_Movies table created.');
 
-          // Path to the CSV file
-          const filePath = path.join(__dirname, 'movies.csv');
+          // Create the login_tb table
+          connection.query(createLoginTable, (error) => {
+            if (error) throw error;
+            console.log('login_tb table created.');
 
-          // Read and import CSV data
-          fs.createReadStream(filePath)
-            .pipe(csv({ separator: ',', headers: ['ID', 'Title', 'Release Date', 'Popularity', 'Poster URL', 'Backdrop URL', 'Overview', 'Genres', 'Actors', 'Trailers'], skipHeaders: true })) // Skip the header row
-            .on('data', (row) => {
-              // Check if the row contains header values and skips
-              if (row.ID === 'ID') {
-                return;
-              }
+            // Path to the CSV file
+            const filePath = path.join(__dirname, 'movies.csv');
 
-              // Insert data into MySQL
-              const query = `INSERT INTO Old_Hollywood_Movies (ID, Title, Release_Date, Popularity, Poster_URL, Backdrop_URL, Overview, Genres, Actors, Trailers) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-              connection.query(query, [
-                row.ID,
-                row['Title'],
-                row['Release Date'],
-                row.Popularity,
-                row['Poster URL'],
-                row['Backdrop URL'],
-                row.Overview,
-                row.Genres,
-                row.Actors,
-                row.Trailers
-              ], (err) => {
-                if (err) throw err;
+            // Read and import CSV data
+            fs.createReadStream(filePath)
+              .pipe(csv({ separator: ',', headers: ['ID', 'Title', 'Release Date', 'Popularity', 'Poster URL', 'Backdrop URL', 'Overview', 'Genres', 'Actors', 'Trailers'], skipHeaders: true })) // Skip the header row
+              .on('data', (row) => {
+                // Check if the row contains header values and skips
+                if (row.ID === 'ID') {
+                  return;
+                }
+
+                // Insert data into MySQL
+                const query = `INSERT INTO Old_Hollywood_Movies (ID, Title, Release_Date, Popularity, Poster_URL, Backdrop_URL, Overview, Genres, Actors, Trailers) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                connection.query(query, [
+                  row.ID,
+                  row['Title'],
+                  row['Release Date'],
+                  row.Popularity,
+                  row['Poster URL'],
+                  row['Backdrop URL'],
+                  row.Overview,
+                  row.Genres,
+                  row.Actors,
+                  row.Trailers
+                ], (error) => {
+                  if (error) throw error;
+                });
+              })
+              .on('end', () => {
+                console.log('CSV data inserted.');
+                connection.end();
               });
-            })
-            .on('end', () => {
-              console.log('CSV data inserted.');
-              connection.end();
-            });
+          });
         });
       });
     });
