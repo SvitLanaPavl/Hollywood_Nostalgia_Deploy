@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        'gray-custom': 'rgba(51, 51, 51, 0.8)',
         primary: '#E74504',
         interface: '#000000',
         secondary: 'rgba(51, 51, 51, 0.8)', 
