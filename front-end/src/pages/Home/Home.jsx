@@ -3,6 +3,7 @@ import './home.css'
 import Navbar from '../../components/Navbar/Navbar'
 import Hero from '../../components/Hero/Hero'
 import Filters from '../../components/Filters/Filters'
+import MovieGrid from '../../components/MovieCards/MovieGrid'
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
       <Navbar />
       <Hero />
       <Filters />
+      <MovieGrid />
     </div>
   )
 }

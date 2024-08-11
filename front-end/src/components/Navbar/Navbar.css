@@ -11,6 +11,7 @@
   position: fixed;
   top: 0;
   background-color: #000000; /* Black background when scrolled */
+  z-index: 40;
 }
 .navbar-logo span {
   color: #E74504;

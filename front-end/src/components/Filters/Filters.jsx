@@ -145,7 +145,7 @@ const Filters = () => {
             {selectedSort} <img src={downIcon} alt="Down Icon" />
           </button>
           {isSortOpen && (
-            <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
+            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg max-h-40 overflow-y-auto z-30">
               <div className="flex flex-col pt-1 pb-1">
                 {['Latest', 'Oldest'].map((sortType) => (
                   <div key={sortType}
@@ -165,7 +165,7 @@ const Filters = () => {
             {selectedYear} <img src={downIcon} alt="Down Icon" />
           </button>
           {isYearOpen && (
-            <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
+            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg z-30 max-h-40 overflow-y-auto">
               <div className="flex flex-col pt-2 pb-2">
                 {years.map((year) => (
                   <div
@@ -188,7 +188,7 @@ const Filters = () => {
             {selectedAlphabet} <img src={downIcon} alt="Down Icon" />
           </button>
           {isAlphabetOpen && (
-            <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
+            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg z-30 max-h-40 overflow-y-auto">
               <div className="flex flex-col justify-around pt-2 pb-2">
                 {alphabets.map((alphabet) => (
                   <div

@@ -1,0 +1,7 @@
+.round {
+  width: 45px;
+height: 45px;
+flex-shrink: 0;
+  border-radius: 22px;
+border: 1px solid var(--neutral-white, #FFF);
+}
