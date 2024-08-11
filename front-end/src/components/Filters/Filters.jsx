@@ -1,23 +1,27 @@
-import React, { useState } from 'react'
-import searchIcon from '../../assets/search_icon.svg'
-import closeIcon from '../../assets/close_icon.svg'
-import movieIcon from '../../assets/movie_icon.svg'
-import nextIcon from '../../assets/next.svg'
-import prevIcon from '../../assets/prev.svg'
-import downIcon from '../../assets/down.svg'
-import checkIcon from '../../assets/check.svg'
-import './Filters.css'
+import React, { useState } from 'react';
+import searchIcon from '../../assets/search_icon.svg';
+import closeIcon from '../../assets/close_icon.svg';
+import movieIcon from '../../assets/movie_icon.svg';
+import nextIcon from '../../assets/next.svg';
+import prevIcon from '../../assets/prev.svg';
+import downIcon from '../../assets/down.svg';
+import checkIcon from '../../assets/check.svg';
+import './Filters.css';
 
-const genres = ['Action', 'Adventure', 'Animation', 'Comedy',
+const genres = [
+  'Action', 'Adventure', 'Animation', 'Comedy',
   'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'History',
   'Horror', 'Music', 'Mystery', 'Romance', 'Science Fiction',
-  'Thriller', 'War', 'Western'];
+  'Thriller', 'War', 'Western'
+];
 
 const Filters = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleGenres, setVisibleGenres] = useState(7); //initially 7 genres are visible
   const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
-  const [selectedSort, setSelectedSort] = useState('Latest')
+  const [selectedSort, setSelectedSort] = useState('Latest');
+  const [selectedYear, setSelectedYear] = useState('Year');
+  const [selectedAlphabet, setSelectedAlphabet] = useState('A-Z');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isAlphabetOpen, setIsAlphabetOpen] = useState(false);
@@ -65,8 +69,19 @@ const Filters = () => {
     setIsSortOpen(false);
   };
 
-  const alphabets = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
-  const years = Array.from({ length: 1961 - 1920 }, (_, i) => (1920 + i).toString());
+  const handleYearSelection = (year) => {
+    setSelectedYear(year);
+    setIsYearOpen(false);
+  };
+
+  const handleAlphabetSelection = (alphabet) => {
+    setSelectedAlphabet(alphabet);
+    setIsAlphabetOpen(false);
+  };
+
+  const alphabets = ['All', ...Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))];
+  const years = ['All', ...Array.from({ length: 1961 - 1920 }, (_, i) => (1920 + i).toString())];
+
 
   return (
     <div className="container mx-auto flex flex-col gap-6 mt-10">
@@ -77,8 +92,8 @@ const Filters = () => {
           <h2 className="text-white text-2xl font-semibold ml-4">Movies</h2>
         </div>
         <div className='search-bar shadow-lg flex items-center'>
-          <img src={searchIcon} alt='Search Icon' className='search-icon-inside'/>
-          <input 
+          <img src={searchIcon} alt='Search Icon' className='search-icon-inside' />
+          <input
             type='text'
             placeholder='Title, actors, genre'
             value={searchTerm}
@@ -134,10 +149,10 @@ const Filters = () => {
               <div className="flex flex-col pt-1 pb-1">
                 {['Latest', 'Oldest'].map((sortType) => (
                   <div key={sortType}
-                  className={`flex indent-3 p-0.5 justify-between cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]`}
-                  onClick={() => handleSortSelection(sortType)}>
-                  {sortType} {selectedSort === sortType && <img src={checkIcon} alt="Check Icon" />}
-                </div>
+                    className={`flex indent-3 p-0.5 justify-between cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]`}
+                    onClick={() => handleSortSelection(sortType)}>
+                    {sortType} {selectedSort === sortType && <img src={checkIcon} className='me-1' alt="Check Icon" />}
+                  </div>
                 ))}
               </div>
             </div>
@@ -145,55 +160,49 @@ const Filters = () => {
         </div>
         {/* Year Dropdown */}
         <div className="relative">
-        <button onClick={toggleYearDropdown}
-        className="flex justify-between items-center px-3 py-2 hover:brightness-110 rounded-full bg-gray-custom text-white font-regular w-[100px] h-[39px]">
-          Year <img src={downIcon} alt="Down Icon" />
-        </button>
-        {isYearOpen && (
-          <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
-            <div className="flex flex-col pt-2 pb-2">
-              {years.map((year) => (
-                <div
-                key={year}
-                className="flex p-0.5 indent-3 cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]"
-                onClick={() => {
-                  setSelectedSort(year);
-                  setIsYearOpen(false);
-                }}
-              >
-                {year} {selectedSort === year && <img src={checkIcon} alt="Check Icon" />}
-                </div>
-              ))}
-              </div>
-          </div>
-        )}
-      </div>
-      {/* Alphabet Dropdown */}
-      <div className="relative">
-        <button
-        onClick={toggleAlphabetDropdown}
-        className="flex justify-between items-center px-3 py-2 hover:brightness-110 rounded-full bg-gray-custom text-white font-regular w-[100px] h-[39px]">
-          A-Z <img src={downIcon} alt="Down Icon" />
-        </button>
-        {isAlphabetOpen && (
-          <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
-          <div className="flex flex-col justify-around pt-2 pb-2">
-            {alphabets.map((alphabet) => (
-              <div
-                key={alphabet}
-                className="flex p-0.5 indent-3 cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]"
-                onClick={() => {
-                  setSelectedSort(alphabet);
-                  setIsAlphabetOpen(false);
-                }}
-              >
-                 {alphabet} {selectedSort === alphabet && <img src={checkIcon} alt="Check Icon" />}
-                </div>
-              ))}
+          <button onClick={toggleYearDropdown}
+            className="flex justify-between items-center px-3 py-2 hover:brightness-110 rounded-full bg-gray-custom text-white font-regular w-[100px] h-[39px]">
+            {selectedYear} <img src={downIcon} alt="Down Icon" />
+          </button>
+          {isYearOpen && (
+            <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
+              <div className="flex flex-col pt-2 pb-2">
+                {years.map((year) => (
+                  <div
+                    key={year}
+                    className="flex p-0.5 justify-between indent-3 cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]"
+                    onClick={() => handleYearSelection(year)}
+                  >
+                    {year} {selectedYear === year && <img src={checkIcon} className='me-1' alt="Check Icon" />}
+                  </div>
+                ))}
               </div>
             </div>
-        )}
-      </div>
+          )}
+        </div>
+        {/* Alphabet Dropdown */}
+        <div className="relative">
+          <button
+            onClick={toggleAlphabetDropdown}
+            className="flex justify-between items-center px-3 py-2 hover:brightness-110 rounded-full bg-gray-custom text-white font-regular w-[100px] h-[39px]">
+            {selectedAlphabet} <img src={downIcon} alt="Down Icon" />
+          </button>
+          {isAlphabetOpen && (
+            <div className="absolute mt-1 w-full rounded-lg bg-gray-custom shadow-lg z-10 max-h-40 overflow-y-auto">
+              <div className="flex flex-col justify-around pt-2 pb-2">
+                {alphabets.map((alphabet) => (
+                  <div
+                    key={alphabet}
+                    className="flex p-0.5 justify-between indent-3 cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]"
+                    onClick={() => handleAlphabetSelection(alphabet)}
+                  >
+                    {alphabet} {selectedAlphabet === alphabet && <img src={checkIcon} className='me-1' alt="Check Icon" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
