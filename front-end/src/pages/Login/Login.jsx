@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import signupImg from '../../assets/signup.jpg'
+import './Login_Signup.css'
 
 const LogIn = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-500 bg-opacity-60">
+    <div className="signup flex justify-center items-center min-h-screen bg-gray-500 bg-opacity-60">
       <div className="flex w-[1000px] h-[800px] bg-interface rounded-3xl overflow-hidden shadow-lg">
         <div className="w-2/5 bg-cover" style={{ backgroundImage: `url(${signupImg})` }}></div>
         <div className="w-3/5 p-10 flex flex-col justify-start">
@@ -38,7 +39,7 @@ const LogIn = () => {
               Log In
             </button>
           </form>
-          <p className="mt-6 text-center text-white text-opacity-65 text-lg">
+          <p className="mt-6 text-center text-white text-opacity-65 text-base">
             New user?{" "}
             <Link to="/signup" className="text-primary font-bold hover:brightness-110">
               Create Account

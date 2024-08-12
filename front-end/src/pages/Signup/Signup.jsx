@@ -5,7 +5,7 @@ import './Signup.css'
 
 const SignUp = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-500 bg-opacity-60">
+    <div className="signup flex justify-center items-center min-h-screen bg-secondary bg-opacity-60">
       <div className="flex w-[1000px] h-[800px] bg-interface rounded-3xl overflow-hidden shadow-lg">
         <div className="w-2/5 bg-cover" style={{ backgroundImage: `url(${signupImg})` }}></div>
         <div className="w-3/5 p-10 flex flex-col justify-start">
@@ -50,7 +50,7 @@ const SignUp = () => {
               Create Account
             </button>
           </form>
-          <p className="mt-6 text-center text-white text-opacity-65 text-lg">
+          <p className="mt-6 text-center text-white text-opacity-65 text-base">
             Already have an account?{" "}
             <Link to="/login" className="text-primary hover:brightness-110 font-bold">
               Log in
