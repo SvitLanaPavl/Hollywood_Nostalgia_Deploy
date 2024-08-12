@@ -1,0 +1,119 @@
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10; /* Ensure it sits on top of the hero section */
+  background-color: rgba(20, 20, 20, 0.6); /* Initial transparent grayish background */
+  transition: background-color 0.3s ease-in-out;
+}
+
+.navbar.fixed {
+  position: fixed;
+  top: 0;
+  background-color: #000000; /* Black background when scrolled */
+  z-index: 40;
+}
+.navbar-logo span {
+  color: #E74504;
+  text-align: center;
+  font-family: 'Bayon', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-image {
+  width: 45px;
+  height: auto;
+}
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.search-icon img,
+.search-icon-inside {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: 400px;
+  height: 36px;
+  border-radius: 20px;
+  background: rgba(51, 51, 51, 0.80);
+  padding: 0 10px;
+  position: relative;
+  border: 1px solid transparent;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  outline: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  outline: none;
+  padding-left: 10px;
+}
+.search-bar input:focus {
+  outline: none; 
+}
+
+.search-bar:focus-within {
+  border-color: rgba(231, 69, 4, 0.2);
+}
+.signup-btn {
+  display: flex;
+  width: 127px;
+  height: 36px;
+  padding: 0 31px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #E74504;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+}
+.login-btn {
+  display: flex;
+  width: 127px;
+  height: 36px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid #E74504;
+  color: #E74504;
+  background-color: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(255, 255, 255, 0.25);
+}
+.close-icon {
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+  margin-right: 5px;
+  z-index: 10;
+}
+.cancel-text {
+  color: #E74504;
+  opacity: 0.7;
+  cursor: pointer;
+  font-size: 13px;
+}
+.cancel-text:hover {
+  opacity: 1;
+}
+.thin-input {
+  font-weight: 400; /* Light weight */
+  font-size: 10px;
+  opacity: 0.7;
+  font-family: 'Inter', sans-serif; /* Ensure you're using the correct font */
+}
