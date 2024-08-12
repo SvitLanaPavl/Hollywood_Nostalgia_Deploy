@@ -2,10 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import signupImg from '../../assets/signup.jpg'
 import './Login_Signup.css'
+import prev from '../../assets/prev.svg'
 
 const LogIn = () => {
   return (
     <div className="signup flex justify-center items-center min-h-screen bg-gray-500 bg-opacity-60">
+      {/* Back to Home Link */}
+      <Link to="/" className="absolute flex justify-center items-center top-4 left-4 text-white opacity-60 text-base font-medium hover:scale-105 transition ease-in-out duration-300">
+          <img src={prev} alt='Prev Icon' className='w-4 me-2'/>
+          Back to Home
+        </Link>
       <div className="flex w-[1000px] h-[800px] bg-interface rounded-3xl overflow-hidden shadow-lg">
         <div className="w-2/5 bg-cover" style={{ backgroundImage: `url(${signupImg})` }}></div>
         <div className="w-3/5 p-10 flex flex-col justify-start">
