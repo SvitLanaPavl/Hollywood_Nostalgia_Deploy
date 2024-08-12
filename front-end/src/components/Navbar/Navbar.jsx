@@ -3,6 +3,7 @@ import './Navbar.css'
 import searchIcon from '../../assets/search_icon.svg'
 import closeIcon from '../../assets/close_icon.svg';
 import logo from '/logoOH.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [searchActive, setSearchActive] = useState(false);
@@ -44,10 +45,11 @@ const Navbar = () => {
 
   return (
     <div className={`navbar ${isScrolled ? 'fixed' : ''} flex py-1 px-4 justify-between shadow-2xl`}>
-      <div className='navbar-logo flex'>
+      <Link to='/'><div className='navbar-logo flex'>
       <img src={logo} alt="Logo" className="logo-image hover:scale-110 transition ease-in-out delay-125" />
        <span className='px-1'>Old Hollywood</span> 
       </div>
+      </Link>
       <div className='navbar-right'>
         {!searchActive && (<div className='search-icon hover:scale-125 transition ease-in-out delay-125' onClick={toggleSearch}>
           <img src={searchIcon} alt='Search Icon' />
@@ -75,8 +77,8 @@ const Navbar = () => {
           <span className='cancel-text' onClick={handleCancel}>Cancel</span>
           </>
         )}
-        <button className='signup-btn hover:brightness-110 rounded-full bg-primary shadow-primary text-white'>Sign up</button>
-        <button className='login-btn shadow-lg hover:text-white duration-300 cursor-pointer active:scale-[0.98] hover:bg-primary transition ease-in-out delay-125'>Log in</button>
+        <Link to='/signup'><button className='signup-btn hover:brightness-110 rounded-full bg-primary shadow-primary text-white'>Sign up</button></Link>
+        <Link to='/login'><button className='login-btn shadow-lg hover:text-white duration-300 cursor-pointer active:scale-[0.98] hover:bg-primary transition ease-in-out delay-125'>Log in</button></Link>
       </div>
     </div>
   );
