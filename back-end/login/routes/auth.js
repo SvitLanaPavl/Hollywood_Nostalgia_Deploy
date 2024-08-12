@@ -5,7 +5,13 @@ const jwt = require('jsonwebtoken');
 const promisePool = require('../db');
 
 router.post('/register', async (req, res) => {
-    const { username, password, email } = req.body;
+    const { username, password, confirm_password, email } = req.body;
+
+    // check if passwords match
+    if (password !== confirm_password) {
+        return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
     // Password hashing
     const saltRounds = 10; // Adjust salt rounds as needed
     const hashedPassword = await bcrypt.hash(password, saltRounds);
