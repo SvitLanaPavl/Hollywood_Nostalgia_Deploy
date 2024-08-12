@@ -5,14 +5,20 @@ const jwt = require('jsonwebtoken');
 const promisePool = require('../db');
 
 router.post('/register', async (req, res) => {
-    const { user_name, password, email } = req.body;
+    const { username, password, confirm_password, email } = req.body;
+
+    // check if passwords match
+    if (password !== confirm_password) {
+        return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
     // Password hashing
     const saltRounds = 10; // Adjust salt rounds as needed
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     try {
         const [result] = await promisePool.query(
             'INSERT INTO login_tb (username, password, email) VALUES (?, ?, ?)',
-            [user_name, hashedPassword, email]
+            [username, hashedPassword, email]
         );
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
@@ -22,11 +28,11 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { password, email } = req.body;
+    const { password, username } = req.body;
     try {
         const [rows] = await promisePool.query(
-            'SELECT * FROM login_tb WHERE email = ?',
-            [email]
+            'SELECT * FROM login_tb WHERE username = ?',
+            [username]
         );
 
         if (rows.length === 0) {
