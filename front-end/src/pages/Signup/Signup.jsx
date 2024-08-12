@@ -1,15 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import signupImg from '../../assets/signup.jpg'
+import './Signup.css'
 
-const LogIn = () => {
+const SignUp = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-500 bg-opacity-60">
       <div className="flex w-[1000px] h-[800px] bg-interface rounded-3xl overflow-hidden shadow-lg">
         <div className="w-2/5 bg-cover" style={{ backgroundImage: `url(${signupImg})` }}></div>
         <div className="w-3/5 p-10 flex flex-col justify-start">
-          <h1 className="text-white text-center font-inter text-4xl font-bold mb-8">Log In</h1>
+          <h1 className="text-white font-inter text-4xl font-bold mb-8 text-center">Sign Up</h1>
           <form className="space-y-6">
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">Email</label>
+              <input
+                type="email"
+                className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
+                placeholder="example@gmail.com"
+              />
+            </div>
             <div>
               <label className="block text-white text-sm font-medium mb-2">Username</label>
               <input
@@ -22,26 +31,29 @@ const LogIn = () => {
               <label className="block text-white text-sm font-medium mb-2">Password</label>
               <input
                 type="password"
-                className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white focus:outline-offset-0"
+                className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Enter your password"
               />
-              <div className="text-right mt-2">
-                <Link to="/forgot-password" className="text-red-500 text-sm hover:brightness-110">
-                  Forgot password?
-                </Link>
-              </div>
+            </div>
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">Confirm Password</label>
+              <input
+                type="password"
+                className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
+                placeholder="Confirm your password"
+              />
             </div>
             <button
               type="submit"
-              className="w-full h-12 bg-primary hover:brightness-110 rounded-full text-white font-bold mt-4"
+              className="w-full h-12 bg-primary text-white font-bold rounded-full hover:brightness-110 mt-4"
             >
-              Log In
+              Create Account
             </button>
           </form>
           <p className="mt-6 text-center text-white text-opacity-65 text-lg">
-            New user?{" "}
-            <Link to="/signup" className="text-primary font-bold hover:brightness-110">
-              Create Account
+            Already have an account?{" "}
+            <Link to="/login" className="text-primary hover:brightness-110 font-bold">
+              Log in
             </Link>
           </p>
         </div>
@@ -50,4 +62,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default SignUp;

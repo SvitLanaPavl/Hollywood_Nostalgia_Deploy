@@ -1,0 +1,4 @@
+
+.custom-outline:focus {
+  outline-color: rgba(231, 69, 4, 0.8); /* Primary color with 80% opacity on focus */
+}

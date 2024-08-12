@@ -1,0 +1,4 @@
+.custom-outline-focus:focus {
+  outline: 2px solid rgba(231, 69, 4, 0.3); /* Primary color with 30% opacity */
+  outline-offset: 0; /* This keeps the outline close to the element */
+}
