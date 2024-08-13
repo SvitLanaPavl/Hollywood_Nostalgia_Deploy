@@ -5,6 +5,7 @@ import Hero from '../../components/Hero/Hero'
 import Filters from '../../components/Filters/Filters'
 import MovieGrid from '../../components/MovieCards/MovieGrid'
 import Pagination from '../../components/Pagination/Pagination'
+import Footer from '../../components/Footer/Footer'
 
 const Home = () => {
 
@@ -29,6 +30,7 @@ const Home = () => {
         moviesPerPage={moviesPerPage}
         onPageChange={handlePageChange}
       />
+      <Footer />
     </div>
   )
 }
