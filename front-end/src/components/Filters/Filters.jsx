@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios'; // Make sure to install axios
+import React, { useState, useCallback, useEffect } from 'react';
+import axios from 'axios';
 import searchIcon from '../../assets/search_icon.svg';
 import closeIcon from '../../assets/close_icon.svg';
 import movieIcon from '../../assets/movie_icon.svg';
@@ -10,100 +10,68 @@ import checkIcon from '../../assets/check.svg';
 import './Filters.css';
 
 const genres = [
-  'Action', 'Adventure', 'Animation', 'Comedy',
-  'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'History',
-  'Horror', 'Music', 'Mystery', 'Romance', 'Science Fiction',
-  'Thriller', 'War', 'Western'
+  'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama',
+  'Family', 'Fantasy', 'History', 'Horror', 'Music', 'Mystery', 'Romance',
+  'Science Fiction', 'Thriller', 'War', 'Western'
 ];
 
 const Filters = () => {
   const [titleSearchTerm, setTitleSearchTerm] = useState('');
   const [actorSearchTerm, setActorSearchTerm] = useState('');
-  const [visibleGenres, setVisibleGenres] = useState(7); // Initially 7 genres are visible
-  const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('All');
   const [selectedSort, setSelectedSort] = useState('Latest');
-  const [selectedYear, setSelectedYear] = useState('Year');
   const [selectedAlphabet, setSelectedAlphabet] = useState('A-Z');
+  const [visibleGenres, setVisibleGenres] = useState(7);
+  const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isAlphabetOpen, setIsAlphabetOpen] = useState(false);
 
-  // Fetch functions
-  const fetchTitles = useCallback(async (query) => {
+  // fetch movies with filters
+  const fetchMovies = useCallback(async () => {
     try {
-      const response = await axios.get(`/movies?title=${encodeURIComponent(query)}`);
-      console.log('Titles:', response.data);
+      // construct the query string with filters
+      const queryParams = {
+        title: titleSearchTerm || '',
+        actors: actorSearchTerm || '',
+        genres: selectedGenres.length > 0 ? selectedGenres.join(',') : '',
+        release_date: selectedYear !== 'All' ? selectedYear : ''
+      };
+  
+      // remove any parameters with empty values
+      const filteredParams = Object.fromEntries(Object.entries(queryParams).filter(([_, v]) => v !== ''));
+  
+      const query = new URLSearchParams(filteredParams).toString();
+  
+      const response = await axios.get(`/movies?${query}`);
+      console.log('Movies:', response.data);
     } catch (error) {
-      console.error('Error fetching titles:', error);
+      console.error('Error fetching movies:', error);
     }
-  }, []);
+  }, [titleSearchTerm, actorSearchTerm, selectedGenres, selectedYear]);
 
-  const fetchActors = useCallback(async (query) => {
-    try {
-      const response = await axios.get(`/movies?actors=${encodeURIComponent(query)}`);
-      console.log('Actors:', response.data);
-    } catch (error) {
-      console.error('Error fetching actors:', error);
-    }
-  }, []);
+  // fetch movies whenever filters change
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
 
   // Search handlers
-  const handleTitleSearchChange = (e) => {
-    setTitleSearchTerm(e.target.value);
+  const handleSearchChange = (setter) => (e) => setter(e.target.value);
+  const handleGenreToggle = (genre) => {
+    setSelectedGenres(prevGenres =>
+      prevGenres.includes(genre)
+        ? prevGenres.filter(g => g !== genre)
+        : [...prevGenres, genre]
+    );
   };
 
-  const handleActorSearchChange = (e) => {
-    setActorSearchTerm(e.target.value);
-  };
-
-  const handleKeyDown = (event, searchTerm, fetchFunction) => {
+  const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      fetchFunction(searchTerm);
+      fetchMovies();
     }
   };
 
-  // Clear search inputs
-  const clearTitleSearch = () => {
-    setTitleSearchTerm('');
-  };
-
-  const clearActorSearch = () => {
-    setActorSearchTerm('');
-  };
-
-  // Genre navigation
-  const handleNextGenres = () => {
-    if (currentGenreIndex + visibleGenres < genres.length) {
-      setCurrentGenreIndex(currentGenreIndex + 1);
-    }
-  };
-
-  const handlePrevGenres = () => {
-    if (currentGenreIndex > 0) {
-      setCurrentGenreIndex(currentGenreIndex - 1);
-    }
-  };
-
-  // Dropdown handlers
-  const toggleSortDropdown = () => {
-    setIsSortOpen(!isSortOpen);
-    setIsYearOpen(false);
-    setIsAlphabetOpen(false);
-  };
-
-  const toggleYearDropdown = () => {
-    setIsYearOpen(!isYearOpen);
-    setIsSortOpen(false);
-    setIsAlphabetOpen(false);
-  };
-
-  const toggleAlphabetDropdown = () => {
-    setIsAlphabetOpen(!isAlphabetOpen);
-    setIsSortOpen(false);
-    setIsYearOpen(false);
-  };
-
-  // Dropdown selection handlers
   const handleSortSelection = (sortType) => {
     setSelectedSort(sortType);
     setIsSortOpen(false);
@@ -117,6 +85,23 @@ const Filters = () => {
   const handleAlphabetSelection = (alphabet) => {
     setSelectedAlphabet(alphabet);
     setIsAlphabetOpen(false);
+  };
+
+  // Dropdown handlers
+  const toggleDropdown = (dropdownType) => {
+    if (dropdownType === 'sort') {
+      setIsSortOpen(!isSortOpen);
+      setIsYearOpen(false);
+      setIsAlphabetOpen(false);
+    } else if (dropdownType === 'year') {
+      setIsYearOpen(!isYearOpen);
+      setIsSortOpen(false);
+      setIsAlphabetOpen(false);
+    } else if (dropdownType === 'alphabet') {
+      setIsAlphabetOpen(!isAlphabetOpen);
+      setIsSortOpen(false);
+      setIsYearOpen(false);
+    }
   };
 
   // Generate arrays for dropdowns
@@ -137,15 +122,15 @@ const Filters = () => {
             type='text'
             placeholder='Title'
             value={titleSearchTerm}
-            onChange={handleTitleSearchChange}
-            onKeyDown={(event) => handleKeyDown(event, titleSearchTerm, fetchTitles)}
+            onChange={handleSearchChange(setTitleSearchTerm)}
+            onKeyDown={handleKeyDown}
             className='thin-input bg-transparent outline-none text-white placeholder-white px-2'
           />
           {titleSearchTerm && (
             <img src={closeIcon}
               alt='Close Icon'
               className='close-icon cursor-pointer'
-              onClick={clearTitleSearch}
+              onClick={() => setTitleSearchTerm('')}
             />
           )}
         </div>
@@ -155,50 +140,49 @@ const Filters = () => {
             type='text'
             placeholder='Actors'
             value={actorSearchTerm}
-            onChange={handleActorSearchChange}
-            onKeyDown={(event) => handleKeyDown(event, actorSearchTerm, fetchActors)}
+            onChange={handleSearchChange(setActorSearchTerm)}
+            onKeyDown={handleKeyDown}
             className='thin-input bg-transparent outline-none text-white placeholder-white px-2'
           />
           {actorSearchTerm && (
             <img src={closeIcon}
               alt='Close Icon'
               className='close-icon cursor-pointer'
-              onClick={clearActorSearch}
+              onClick={() => setActorSearchTerm('')}
             />
           )}
         </div>
-        <div className="w-9 h-8"></div> {/* Empty div for alignment */}
+        <div className="w-9 h-8"></div>
       </div>
       <hr className="border-t-2 border-gray-custom w-full" />
 
       {/* Second Row */}
       <div className="flex mx-auto justify-around items-center gap-4 w-full">
         {currentGenreIndex > 0 && (
-          <img src={prevIcon} alt="Previous Icon" onClick={handlePrevGenres} className="cursor-pointer" />
+          <img src={prevIcon} alt="Previous Icon" onClick={() => setCurrentGenreIndex(currentGenreIndex - 1)} className="cursor-pointer" />
         )}
         <div className="flex justify-between flex-grow overflow-hidden">
-          {genres.slice(currentGenreIndex, currentGenreIndex + visibleGenres).map((genre, index) => (
+          {genres.slice(currentGenreIndex, currentGenreIndex + visibleGenres).map((genre) => (
             <button
               key={genre}
-              className={`flex justify-center items-center px-6 py-2 hover:brightness-110 rounded-full ${index % 2 === 0 ? 'bg-primary' : 'bg-gray-custom'} w-[151px] h-[39px] text-white font-regular`}
+              className={`flex justify-center items-center px-6 py-2 hover:brightness-110 rounded-full ${selectedGenres.includes(genre) ? 'bg-primary' : 'bg-gray-custom'} w-[151px] h-[39px] text-white font-regular`}
+              onClick={() => handleGenreToggle(genre)}
             >
               {genre}
             </button>
           ))}
         </div>
         {currentGenreIndex + visibleGenres < genres.length && (
-          <img src={nextIcon} alt="Next Icon" onClick={handleNextGenres} className="cursor-pointer" />
+          <img src={nextIcon} alt="Next Icon" onClick={() => setCurrentGenreIndex(currentGenreIndex + 1)} className="cursor-pointer" />
         )}
       </div>
 
       {/* Third Row */}
       <div className="flex items-center gap-8">
-        <div className="text-white opacity-50 text-lg font-regular">
-          Sort By:
-        </div>
+        <div className="text-white opacity-50 text-lg font-regular">Sort By:</div>
         <div className="relative">
           <button
-            onClick={toggleSortDropdown}
+            onClick={() => toggleDropdown('sort')}
             className="flex justify-between items-center px-3 py-2 rounded-full hover:brightness-110 bg-primary text-white font-regular w-[100px] h-[39px]"
           >
             {selectedSort} <img src={downIcon} alt="Down Icon" />
@@ -217,10 +201,11 @@ const Filters = () => {
             </div>
           )}
         </div>
+
         {/* Year Dropdown */}
         <div className="relative">
           <button
-            onClick={toggleYearDropdown}
+            onClick={() => toggleDropdown('year')}
             className="flex justify-between items-center px-3 py-2 rounded-full hover:brightness-110 bg-primary text-white font-regular w-[100px] h-[39px]"
           >
             {selectedYear} <img src={downIcon} alt="Down Icon" />
@@ -239,10 +224,11 @@ const Filters = () => {
             </div>
           )}
         </div>
+
         {/* Alphabet Dropdown */}
         <div className="relative">
           <button
-            onClick={toggleAlphabetDropdown}
+            onClick={() => toggleDropdown('alphabet')}
             className="flex justify-between items-center px-3 py-2 rounded-full hover:brightness-110 bg-primary text-white font-regular w-[100px] h-[39px]"
           >
             {selectedAlphabet} <img src={downIcon} alt="Down Icon" />
@@ -250,11 +236,11 @@ const Filters = () => {
           {isAlphabetOpen && (
             <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg max-h-40 overflow-y-auto z-30">
               <div className="flex flex-col pt-1 pb-1">
-                {alphabets.map((letter) => (
-                  <div key={letter}
+                {alphabets.map((alphabet) => (
+                  <div key={alphabet}
                     className={`flex indent-3 p-0.5 justify-between cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]`}
-                    onClick={() => handleAlphabetSelection(letter)}>
-                    {letter} {selectedAlphabet === letter && <img src={checkIcon} className='me-1' alt="Check Icon" />}
+                    onClick={() => handleAlphabetSelection(alphabet)}>
+                    {alphabet} {selectedAlphabet === alphabet && <img src={checkIcon} className='me-1' alt="Check Icon" />}
                   </div>
                 ))}
               </div>
