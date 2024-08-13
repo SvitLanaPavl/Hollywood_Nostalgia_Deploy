@@ -95,7 +95,24 @@ const Filters = () => {
           <img src={searchIcon} alt='Search Icon' className='search-icon-inside' />
           <input
             type='text'
-            placeholder='Title, actors, genre'
+            placeholder='Title'
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className='thin-input bg-transparent outline-none text-white placeholder-white px-2'
+          />
+          {searchTerm && (
+            <img src={closeIcon}
+              alt='Close Icon'
+              className='close-icon cursor-pointer'
+              onClick={clearSearch}
+            />
+          )}
+        </div>
+        <div className='search-bar shadow-lg flex items-center'>
+          <img src={searchIcon} alt='Search Icon' className='search-icon-inside' />
+          <input
+            type='text'
+            placeholder='Actors'
             value={searchTerm}
             onChange={handleSearchChange}
             className='thin-input bg-transparent outline-none text-white placeholder-white px-2'
