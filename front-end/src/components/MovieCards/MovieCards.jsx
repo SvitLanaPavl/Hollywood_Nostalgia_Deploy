@@ -21,11 +21,13 @@ const MovieCard = ({ movie }) => {
     setIsHovered(false);
   };
 
-  const toggleFavorite = () => {
+  const toggleFavorite = (e) => {
+    e.stopPropagation();
     setIsFavorite(!isFavorite);
   };
 
-  const handleWatchTrailer = () => {
+  const handleWatchTrailer = (e) => {
+    e.stopPropagation();
     navigate(`/trailer/${movie.id}`); // this will navigate to the player page with the movie ID from DB
   }
 
