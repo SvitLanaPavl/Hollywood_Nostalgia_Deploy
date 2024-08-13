@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios'; // Make sure to install axios
 import searchIcon from '../../assets/search_icon.svg';
 import closeIcon from '../../assets/close_icon.svg';
 import movieIcon from '../../assets/movie_icon.svg';
@@ -16,8 +17,9 @@ const genres = [
 ];
 
 const Filters = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [visibleGenres, setVisibleGenres] = useState(7); //initially 7 genres are visible
+  const [titleSearchTerm, setTitleSearchTerm] = useState('');
+  const [actorSearchTerm, setActorSearchTerm] = useState('');
+  const [visibleGenres, setVisibleGenres] = useState(7); // Initially 7 genres are visible
   const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
   const [selectedSort, setSelectedSort] = useState('Latest');
   const [selectedYear, setSelectedYear] = useState('Year');
@@ -26,14 +28,50 @@ const Filters = () => {
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isAlphabetOpen, setIsAlphabetOpen] = useState(false);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  // Fetch functions
+  const fetchTitles = useCallback(async (query) => {
+    try {
+      const response = await axios.get(`/movies?title=${encodeURIComponent(query)}`);
+      console.log('Titles:', response.data);
+    } catch (error) {
+      console.error('Error fetching titles:', error);
+    }
+  }, []);
+
+  const fetchActors = useCallback(async (query) => {
+    try {
+      const response = await axios.get(`/movies?actors=${encodeURIComponent(query)}`);
+      console.log('Actors:', response.data);
+    } catch (error) {
+      console.error('Error fetching actors:', error);
+    }
+  }, []);
+
+  // Search handlers
+  const handleTitleSearchChange = (e) => {
+    setTitleSearchTerm(e.target.value);
   };
 
-  const clearSearch = () => {
-    setSearchTerm('');
+  const handleActorSearchChange = (e) => {
+    setActorSearchTerm(e.target.value);
   };
 
+  const handleKeyDown = (event, searchTerm, fetchFunction) => {
+    if (event.key === 'Enter') {
+      fetchFunction(searchTerm);
+    }
+  };
+
+  // Clear search inputs
+  const clearTitleSearch = () => {
+    setTitleSearchTerm('');
+  };
+
+  const clearActorSearch = () => {
+    setActorSearchTerm('');
+  };
+
+  // Genre navigation
   const handleNextGenres = () => {
     if (currentGenreIndex + visibleGenres < genres.length) {
       setCurrentGenreIndex(currentGenreIndex + 1);
@@ -46,6 +84,7 @@ const Filters = () => {
     }
   };
 
+  // Dropdown handlers
   const toggleSortDropdown = () => {
     setIsSortOpen(!isSortOpen);
     setIsYearOpen(false);
@@ -64,6 +103,7 @@ const Filters = () => {
     setIsYearOpen(false);
   };
 
+  // Dropdown selection handlers
   const handleSortSelection = (sortType) => {
     setSelectedSort(sortType);
     setIsSortOpen(false);
@@ -79,9 +119,9 @@ const Filters = () => {
     setIsAlphabetOpen(false);
   };
 
+  // Generate arrays for dropdowns
   const alphabets = ['All', ...Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))];
   const years = ['All', ...Array.from({ length: 1961 - 1920 }, (_, i) => (1920 + i).toString())];
-
 
   return (
     <div className="container mx-auto flex flex-col gap-6 mt-10">
@@ -96,15 +136,16 @@ const Filters = () => {
           <input
             type='text'
             placeholder='Title'
-            value={searchTerm}
-            onChange={handleSearchChange}
+            value={titleSearchTerm}
+            onChange={handleTitleSearchChange}
+            onKeyDown={(event) => handleKeyDown(event, titleSearchTerm, fetchTitles)}
             className='thin-input bg-transparent outline-none text-white placeholder-white px-2'
           />
-          {searchTerm && (
+          {titleSearchTerm && (
             <img src={closeIcon}
               alt='Close Icon'
               className='close-icon cursor-pointer'
-              onClick={clearSearch}
+              onClick={clearTitleSearch}
             />
           )}
         </div>
@@ -113,15 +154,16 @@ const Filters = () => {
           <input
             type='text'
             placeholder='Actors'
-            value={searchTerm}
-            onChange={handleSearchChange}
+            value={actorSearchTerm}
+            onChange={handleActorSearchChange}
+            onKeyDown={(event) => handleKeyDown(event, actorSearchTerm, fetchActors)}
             className='thin-input bg-transparent outline-none text-white placeholder-white px-2'
           />
-          {searchTerm && (
+          {actorSearchTerm && (
             <img src={closeIcon}
               alt='Close Icon'
               className='close-icon cursor-pointer'
-              onClick={clearSearch}
+              onClick={clearActorSearch}
             />
           )}
         </div>
@@ -177,19 +219,19 @@ const Filters = () => {
         </div>
         {/* Year Dropdown */}
         <div className="relative">
-          <button onClick={toggleYearDropdown}
-            className="flex justify-between items-center px-3 py-2 hover:brightness-110 rounded-full bg-gray-custom text-white font-regular w-[100px] h-[39px]">
+          <button
+            onClick={toggleYearDropdown}
+            className="flex justify-between items-center px-3 py-2 rounded-full hover:brightness-110 bg-primary text-white font-regular w-[100px] h-[39px]"
+          >
             {selectedYear} <img src={downIcon} alt="Down Icon" />
           </button>
           {isYearOpen && (
-            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg z-30 max-h-40 overflow-y-auto">
-              <div className="flex flex-col pt-2 pb-2">
+            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg max-h-40 overflow-y-auto z-30">
+              <div className="flex flex-col pt-1 pb-1">
                 {years.map((year) => (
-                  <div
-                    key={year}
-                    className="flex p-0.5 justify-between indent-3 cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]"
-                    onClick={() => handleYearSelection(year)}
-                  >
+                  <div key={year}
+                    className={`flex indent-3 p-0.5 justify-between cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]`}
+                    onClick={() => handleYearSelection(year)}>
                     {year} {selectedYear === year && <img src={checkIcon} className='me-1' alt="Check Icon" />}
                   </div>
                 ))}
@@ -201,19 +243,18 @@ const Filters = () => {
         <div className="relative">
           <button
             onClick={toggleAlphabetDropdown}
-            className="flex justify-between items-center px-3 py-2 hover:brightness-110 rounded-full bg-gray-custom text-white font-regular w-[100px] h-[39px]">
+            className="flex justify-between items-center px-3 py-2 rounded-full hover:brightness-110 bg-primary text-white font-regular w-[100px] h-[39px]"
+          >
             {selectedAlphabet} <img src={downIcon} alt="Down Icon" />
           </button>
           {isAlphabetOpen && (
-            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg z-30 max-h-40 overflow-y-auto">
-              <div className="flex flex-col justify-around pt-2 pb-2">
-                {alphabets.map((alphabet) => (
-                  <div
-                    key={alphabet}
-                    className="flex p-0.5 justify-between indent-3 cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]"
-                    onClick={() => handleAlphabetSelection(alphabet)}
-                  >
-                    {alphabet} {selectedAlphabet === alphabet && <img src={checkIcon} className='me-1' alt="Check Icon" />}
+            <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg max-h-40 overflow-y-auto z-30">
+              <div className="flex flex-col pt-1 pb-1">
+                {alphabets.map((letter) => (
+                  <div key={letter}
+                    className={`flex indent-3 p-0.5 justify-between cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]`}
+                    onClick={() => handleAlphabetSelection(letter)}>
+                    {letter} {selectedAlphabet === letter && <img src={checkIcon} className='me-1' alt="Check Icon" />}
                   </div>
                 ))}
               </div>

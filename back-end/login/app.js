@@ -12,6 +12,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+app.use((req, res, next) => {
+    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    console.log('Full URL:', fullUrl);
+    next();
+});
+
 // Serve static files from 'public' directory
 app.use(express.static('public'));
 
