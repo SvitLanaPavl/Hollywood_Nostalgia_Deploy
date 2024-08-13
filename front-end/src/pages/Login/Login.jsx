@@ -23,6 +23,7 @@ const LogIn = () => {
                 type="text"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Enter your username"
+                id="login-username" name="username" required // Mei added
               />
             </div>
             <div>
@@ -31,6 +32,7 @@ const LogIn = () => {
                 type="password"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white focus:outline-offset-0"
                 placeholder="Enter your password"
+                id="login-password" name="password" required // Mei added
               />
               <div className="text-right mt-2">
                 <Link to="/forgot-password" className="text-red-500 text-sm hover:brightness-110">
