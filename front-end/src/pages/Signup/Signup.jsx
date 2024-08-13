@@ -23,6 +23,7 @@ const SignUp = () => {
                 type="email"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="example@gmail.com"
+                id="register-email" name="email" required // Mei added
               />
             </div>
             <div>
@@ -31,6 +32,7 @@ const SignUp = () => {
                 type="text"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Enter your username"
+                id="register-user_name" name="username" required // Mei added
               />
             </div>
             <div>
@@ -39,6 +41,7 @@ const SignUp = () => {
                 type="password"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Enter your password"
+                id="register-password" name="password" required // Mei added
               />
             </div>
             <div>
@@ -47,6 +50,7 @@ const SignUp = () => {
                 type="password"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Confirm your password"
+                id="confirm-password" name="confirm_password" required // Mei added
               />
             </div>
             <button
@@ -55,6 +59,8 @@ const SignUp = () => {
             >
               Create Account
             </button>
+            {/* If password doesn't match confirm-password, error message display -- Mei added */}
+            <div id="error-message" style="color: red;"></div>
           </form>
           <p className="mt-6 text-center text-white text-opacity-65 text-base">
             Already have an account?{" "}
