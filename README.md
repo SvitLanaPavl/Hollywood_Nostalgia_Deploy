@@ -16,7 +16,7 @@ The frontend is built using **React.js** and **Tailwind CSS**, delivering a seam
 
 ### **Backend**:
 
-- **Python** was used to set up and manage the database.
+- **JavaScript** was used to set up and manage the database.
 - **MySQL** was chosen as the database for storing movie data and user information.
 - **Express and Node.js** were utilized to handle user authentication and API interactions.
 
