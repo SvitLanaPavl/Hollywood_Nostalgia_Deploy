@@ -4,6 +4,34 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const promisePool = require('../db');
 
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Creates a new user with a hashed password and stores them in the database.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *                 example: jane_doe
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *               email:
+ *                 type: string
+ *                 example: jane@example.com
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       500:
+ *         description: Error registering user
+ */
 router.post('/register', async (req, res) => {
     const { username, password, confirm_password, email } = req.body;
 
@@ -27,12 +55,47 @@ router.post('/register', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Log in a user
+ *     description: Authenticates a user and returns a token if credentials are valid.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *               username:
+ *                 type: string
+ *                 example: jane_doe
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Error logging in
+ */
 router.post('/login', async (req, res) => {
+<<<<<<< HEAD
     const { password, username } = req.body;
     try {
         const [rows] = await promisePool.query(
             'SELECT * FROM login_tb WHERE username = ?',
             [username]
+=======
+    const { password, user_name } = req.body;
+    try {
+        const [rows] = await promisePool.query(
+            'SELECT * FROM login_tb WHERE username = ?',
+            [user_name]
+>>>>>>> a266c93f1cec245f19d1f8c6cbfb9284cf782f0f
         );
 
         if (rows.length === 0) {
