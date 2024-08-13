@@ -28,6 +28,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+    console.log("inside login endpoint");
     const { password, username } = req.body;
     try {
         const [rows] = await promisePool.query(

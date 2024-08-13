@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import signupImg from '../../assets/signup.jpg'
 import './Login_Signup.css'
 import prev from '../../assets/prev.svg'
 
+const handleSubmit = (username, password) => {
+  fetch('http://172.17.0.2:9002/auth/login', {
+    method: "POST",
+    body: {username: username, password: password}
+  })
+}
+
 const LogIn = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   return (
     <div className="signup flex justify-center items-center min-h-screen bg-gray-500 bg-opacity-60">
       {/* Back to Home Link */}
@@ -23,7 +32,7 @@ const LogIn = () => {
                 type="text"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Enter your username"
-                id="login-username" name="username" required // Mei added
+                defaultValue={username} required // Mei added
               />
             </div>
             <div>
@@ -32,7 +41,7 @@ const LogIn = () => {
                 type="password"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white focus:outline-offset-0"
                 placeholder="Enter your password"
-                id="login-password" name="password" required // Mei added
+                defaultValue={password} required // Mei added
               />
               <div className="text-right mt-2">
                 <Link to="/forgot-password" className="text-red-500 text-sm hover:brightness-110">
@@ -43,6 +52,7 @@ const LogIn = () => {
             <button
               type="submit"
               className="w-full h-12 bg-primary hover:brightness-110 rounded-full text-white font-bold mt-4"
+              onClick= {handleSubmit()}
             >
               Log In
             </button>
