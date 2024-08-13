@@ -83,19 +83,12 @@ router.post('/register', async (req, res) => {
  *         description: Error logging in
  */
 router.post('/login', async (req, res) => {
-<<<<<<< HEAD
-    const { password, username } = req.body;
-    try {
-        const [rows] = await promisePool.query(
-            'SELECT * FROM login_tb WHERE username = ?',
-            [username]
-=======
+
     const { password, user_name } = req.body;
     try {
         const [rows] = await promisePool.query(
             'SELECT * FROM login_tb WHERE username = ?',
             [user_name]
->>>>>>> a266c93f1cec245f19d1f8c6cbfb9284cf782f0f
         );
 
         if (rows.length === 0) {
