@@ -3,7 +3,7 @@ import './Pagination.css';
 import prevIcon from '../../assets/prev.svg';
 import nextIcon from '../../assets/next.svg';
 
-const Pagination = ({ currentPage, totalMovies, moviesPerPage, onPageChange }) => {
+const Pagination = ({ currentPage, totalMovies, moviesPerPage = 18, onPageChange }) => {
   const totalPages = Math.ceil(totalMovies / moviesPerPage);
 
   const handlePrevClick = () => {
@@ -23,7 +23,6 @@ const Pagination = ({ currentPage, totalMovies, moviesPerPage, onPageChange }) =
     const maxPagesToShow = 3;
 
     if (totalPages <= maxPagesToShow + 2) {
-      // Show all page numbers if total pages are less than or equal to maxPagesToShow + 2
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(
           <button
@@ -36,7 +35,6 @@ const Pagination = ({ currentPage, totalMovies, moviesPerPage, onPageChange }) =
         );
       }
     } else {
-      // Show the first page, dots, and the last page
       pageNumbers.push(
         <button
           key={1}
@@ -85,7 +83,7 @@ const Pagination = ({ currentPage, totalMovies, moviesPerPage, onPageChange }) =
   };
 
   return (
-    <div className="containe mx-auto flex w-[1440px] h-[84px] px-[516px] py-[14px] flex-col justify-center items-center gap-2 flex-shrink-0">
+    <div className="container mx-auto flex w-full h-[84px] px-[516px] py-[14px] flex-col justify-center items-center gap-2 flex-shrink-0">
       <div className="flex items-center">
         <button onClick={handlePrevClick} disabled={currentPage === 1} className="disabled:opacity-50">
           <img src={prevIcon} alt="Previous" />
