@@ -1,43 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MovieCard from './MovieCards';
-import casablanca from '../../assets/casablanca.webp'
-import gone from '../../assets/gone.jpg'
-import key from '../../assets/key.jpg'
-import wonderful from '../../assets/wonderful.jpg'
-import fury from '../../assets/fury.jpg'
-import bandits from '../../assets/bandits.jpg'
+import { useFilters } from '../Filters/FiltersContext';
 
-// This is dummu data before it gets populated from database
-const movies = [
-  // Populate this array with movie data objects, each containing title, year, genre, and posterUrl
-  { title: 'Casablanca', year: '1942', genre: 'Drama', posterUrl: casablanca },
-  { title: 'It\'s a wonderful life', year: '1946', genre: 'Drama', posterUrl: wonderful },
-  { title: 'Key Largo', year: '1948', genre: 'Crime', posterUrl: key },
-  { title: 'Fury', year: '1936', genre: 'Crime', posterUrl: fury },
-  { title: 'Gone with the Wind', year: '1939', genre: 'Romance', posterUrl: gone },
-  { title: 'Street Bandits', year: '1951', genre: 'Crime', posterUrl: bandits },
-  { title: 'Casablanca', year: '1942', genre: 'Drama', posterUrl: casablanca },
-  { title: 'It\'s a wonderful life', year: '1946', genre: 'Drama', posterUrl: wonderful },
-  { title: 'Key Largo', year: '1948', genre: 'Crime', posterUrl: key },
-  { title: 'Fury', year: '1936', genre: 'Crime', posterUrl: fury },
-  { title: 'Gone with the Wind', year: '1939', genre: 'Romance', posterUrl: gone },
-  { title: 'Street Bandits', year: '1951', genre: 'Crime', posterUrl: bandits },
-  { title: 'Casablanca', year: '1942', genre: 'Drama', posterUrl: casablanca },
-  { title: 'It\'s a wonderful life', year: '1946', genre: 'Drama', posterUrl: wonderful },
-  { title: 'Key Largo', year: '1948', genre: 'Crime', posterUrl: key },
-  { title: 'Fury', year: '1936', genre: 'Crime', posterUrl: fury },
-  { title: 'Gone with the Wind', year: '1939', genre: 'Romance', posterUrl: gone },
-  { title: 'Street Bandits', year: '1951', genre: 'Crime', posterUrl: bandits },
-];
+const MovieGrid = ({ movies }) => {
+  const { titleSearchTerm, actorSearchTerm, selectedGenres, selectedYear, selectedSort, selectedAlphabet } = useFilters();
 
-const MovieGrid = () => {
+  // Fetch movies function
+  const fetchMovies = async () => {
+    try {
+      const queryParams = {
+        title: titleSearchTerm || '',
+        actors: actorSearchTerm || '',
+        genres: selectedGenres.length > 0 ? selectedGenres.join(',') : '',
+        release_date: selectedYear !== 'All' ? selectedYear : '',
+        sort: selectedSort,
+        alphabet: selectedAlphabet,
+      };
+
+      const filteredParams = new URLSearchParams(Object.entries(queryParams).filter(([_, v]) => v !== '')).toString();
+      const response = await axios.get(`/movies?${filteredParams}`);
+      setMovies(response.data);
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+    }
+  };
+
+  // Use useEffect to fetch movies when any filter changes
+  useEffect(() => {
+    fetchMovies();
+  }, [titleSearchTerm, actorSearchTerm, selectedGenres, selectedYear, selectedSort, selectedAlphabet]);
+
   return (
     <div className='container mx-auto my-6'>
-    <div className="grid grid-cols-6 gap-6">
-      {movies.map((movie, index) => (
-        <MovieCard key={index} movie={movie} />
-      ))}
-    </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+        {movies.length > 0 ? (
+          movies.map((movie) => (
+            <MovieCard 
+              key={movie.id} 
+              movie={{
+                title: movie.Title,
+                year: movie.Release_Date.split('-')[0],
+                genre: movie.Genres,
+                posterUrl: movie.Poster_URL,
+                backdrop: movie.Backdrop_URL,
+                trailer: movie.Trailers
+              }} 
+            />
+          ))
+        ) : (
+          <p>No movies available</p>
+        )}
+      </div>
     </div>
   );
 };
