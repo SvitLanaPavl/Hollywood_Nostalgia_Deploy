@@ -9,12 +9,16 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-console.log('after body parser');
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
+  }
+app.use(cors(corsOptions));
+//console.log('after body parser');
 
 // Serve static files from 'public' directory
 app.use(express.static('public'));
-console.log('after static public directory');
+//console.log('after static public directory');
 
 // Routes
 app.use('/auth', authRoutes);
