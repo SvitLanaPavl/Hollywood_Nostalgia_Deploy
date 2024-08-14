@@ -4,6 +4,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const movieRoutes = require('./routes/movies');
 const pool = require('./db');
+const { swaggerUi, swaggerSpec } = require('./swagger');
 const app = express();
 
 // Middleware
@@ -14,16 +15,22 @@ var corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
   }
 app.use(cors(corsOptions));
-//console.log('after body parser');
+
+app.use((req, res, next) => {
+    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    console.log('Full URL:', fullUrl);
+    next();
+});
 
 // Serve static files from 'public' directory
 app.use(express.static('public'));
-//console.log('after static public directory');
 
 // Routes
 app.use('/auth', authRoutes);
 app.use('/movies', movieRoutes);
-console.log('after route');
+
+// Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Test database connection
 (async () => {
@@ -41,6 +48,7 @@ const PORT = process.env.PORT || 3000;
 // made server for tests
 const server = app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Swagger UI available at http://localhost:${PORT}/api-docs`);
 });
 
 module.exports = { app, server };
