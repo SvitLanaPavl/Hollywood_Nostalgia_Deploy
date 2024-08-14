@@ -5,7 +5,7 @@ import './Login_Signup.css'
 import prev from '../../assets/prev.svg'
 
 const LogIn = () => {
-  const [username, setUsername] = useState('');
+  const [user_name, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ const LogIn = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }) // Convert the body to a JSON string
+        body: JSON.stringify({ user_name, password }) // Convert the body to a JSON string
       });
 
       if (!response.ok) {
@@ -48,7 +48,7 @@ const LogIn = () => {
                 type="text"
                 className="w-full h-12 px-4 rounded-3xl bg-secondary shadow-md text-white"
                 placeholder="Enter your username"
-                value={username}
+                value={user_name}
                 onChange={(e) => setUsername(e.target.value)} // Update state on change
                 required // Mei added
               />
