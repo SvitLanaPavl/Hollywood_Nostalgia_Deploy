@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { useFilters } from './FiltersContext';
 import searchIcon from '../../assets/search_icon.svg';
 import closeIcon from '../../assets/close_icon.svg';
 import movieIcon from '../../assets/movie_icon.svg';
@@ -16,47 +16,33 @@ const genres = [
 ];
 
 const Filters = () => {
-  const [titleSearchTerm, setTitleSearchTerm] = useState('');
-  const [actorSearchTerm, setActorSearchTerm] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [selectedYear, setSelectedYear] = useState('All');
-  const [selectedSort, setSelectedSort] = useState('Latest');
-  const [selectedAlphabet, setSelectedAlphabet] = useState('A-Z');
-  const [visibleGenres, setVisibleGenres] = useState(7);
-  const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isYearOpen, setIsYearOpen] = useState(false);
-  const [isAlphabetOpen, setIsAlphabetOpen] = useState(false);
+  const {
+    titleSearchTerm, setTitleSearchTerm,
+    actorSearchTerm, setActorSearchTerm,
+    selectedGenres, setSelectedGenres,
+    selectedYear, setSelectedYear,
+    selectedSort, setSelectedSort,
+    selectedAlphabet, setSelectedAlphabet
+  } = useFilters();
 
-  // fetch movies with filters
-  const fetchMovies = useCallback(async () => {
-    try {
-      // construct the query string with filters
-      const queryParams = {
-        title: titleSearchTerm || '',
-        actors: actorSearchTerm || '',
-        genres: selectedGenres.length > 0 ? selectedGenres.join(',') : '',
-        release_date: selectedYear !== 'All' ? selectedYear : ''
-      };
-  
-      // remove any parameters with empty values
-      const filteredParams = Object.fromEntries(Object.entries(queryParams).filter(([_, v]) => v !== ''));
-  
-      const query = new URLSearchParams(filteredParams).toString();
-  
-      const response = await axios.get(`/movies?${query}`);
-      console.log('Movies:', response.data);
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    }
-  }, [titleSearchTerm, actorSearchTerm, selectedGenres, selectedYear]);
+  const [visibleGenres, setVisibleGenres] = React.useState(7);
+  const [currentGenreIndex, setCurrentGenreIndex] = React.useState(0);
+  const [isSortOpen, setIsSortOpen] = React.useState(false);
+  const [isYearOpen, setIsYearOpen] = React.useState(false);
+  const [isAlphabetOpen, setIsAlphabetOpen] = React.useState(false);
 
-  // fetch movies whenever filters change
-  useEffect(() => {
-    fetchMovies();
-  }, [fetchMovies]);
+  // Default values for dropdowns
+  const defaultSort = 'Latest';
+  const defaultYear = 'All';
+  const defaultAlphabet = 'All';
 
-  // Search handlers
+  React.useEffect(() => {
+    // Set default values if not already set
+    if (!selectedSort) setSelectedSort(defaultSort);
+    if (!selectedYear) setSelectedYear(defaultYear);
+    if (!selectedAlphabet) setSelectedAlphabet(defaultAlphabet);
+  }, [selectedSort, selectedYear, selectedAlphabet, setSelectedSort, setSelectedYear, setSelectedAlphabet]);
+
   const handleSearchChange = (setter) => (e) => setter(e.target.value);
   const handleGenreToggle = (genre) => {
     setSelectedGenres(prevGenres =>
@@ -68,7 +54,6 @@ const Filters = () => {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      fetchMovies();
     }
   };
 
@@ -236,11 +221,11 @@ const Filters = () => {
           {isAlphabetOpen && (
             <div className="absolute mt-1 w-full rounded-lg bg-secondary shadow-lg max-h-40 overflow-y-auto z-30">
               <div className="flex flex-col pt-1 pb-1">
-                {alphabets.map((alphabet) => (
-                  <div key={alphabet}
+                {alphabets.map((letter) => (
+                  <div key={letter}
                     className={`flex indent-3 p-0.5 justify-between cursor-pointer rounded hover:bg-[rgba(0,0,0,0.2)]`}
-                    onClick={() => handleAlphabetSelection(alphabet)}>
-                    {alphabet} {selectedAlphabet === alphabet && <img src={checkIcon} className='me-1' alt="Check Icon" />}
+                    onClick={() => handleAlphabetSelection(letter)}>
+                    {letter} {selectedAlphabet === letter && <img src={checkIcon} className='me-1' alt="Check Icon" />}
                   </div>
                 ))}
               </div>
