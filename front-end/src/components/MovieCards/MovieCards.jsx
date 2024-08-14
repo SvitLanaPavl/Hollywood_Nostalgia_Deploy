@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import playIcon from '../../assets/play.svg';
 import heartIcon from '../../assets/heart.svg';
 import './MovieCards.css';
@@ -8,7 +7,6 @@ const MovieCard = ({ movie }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const hoverTimeoutRef = useRef(null);
-  const navigate = useNavigate();
 
   const handleMouseEnter = () => {
     hoverTimeoutRef.current = setTimeout(() => {
@@ -21,12 +19,14 @@ const MovieCard = ({ movie }) => {
     setIsHovered(false);
   };
 
-  const toggleFavorite = () => {
+  const toggleFavorite = (e) => {
+    e.stopPropagation();
     setIsFavorite(!isFavorite);
   };
 
-  const handleWatchTrailer = () => {
-    navigate(`/trailer/${movie.id}`); // this will navigate to the player page with the movie ID from DB
+  const handleWatchTrailer = (e) => {
+    e.stopPropagation();
+    window.open(movie.trailer, '_blank');
   }
 
   return (
@@ -40,7 +40,7 @@ const MovieCard = ({ movie }) => {
     >
       <div
         className="w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${movie.posterUrl})` }}
+        style={{ backgroundImage: `url(${isHovered ? movie.backdrop : movie.posterUrl})` }}
       >
         {!isHovered ? (
           <div className="absolute bottom-0 w-full p-2.5 bg-[rgba(51,51,51,0.94)] flex flex-col gap-0.5">
@@ -49,7 +49,7 @@ const MovieCard = ({ movie }) => {
             </h3>
             <div className="flex justify-between items-center text-white/75 font-inter text-sm">
               <span>{movie.year}</span>
-              <span>{movie.genre}</span>
+              {/* <span>{movie.genre}</span> */}
               <img 
                 src={heartIcon} 
                 alt="Favorite" 
